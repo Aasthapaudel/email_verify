@@ -1,56 +1,105 @@
 <x-guest-layout>
-    <x-authentication-card>
-        <x-slot name="logo">
-            <x-authentication-card-logo />
-        </x-slot>
+    <x-auth-card>
+        <!-- Session Status -->
+        <x-auth-session-status class="mb-4" :status="session('status')" />
 
-        <x-validation-errors class="mb-4" />
-
-        @if (session('status'))
-            <div class="mb-4 font-medium text-sm text-green-600">
-                {{ session('status') }}
-            </div>
-        @endif
+        <!-- Validation Errors -->
+        <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
         <form method="POST" action="{{ route('login') }}">
             @csrf
 
-            <div>
-                <x-label for="email" value="{{ __('Email') }}" />
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            </div>
+            <div class="grid gap-6">
+                <!-- Email Address -->
+                <div class="space-y-2">
+                    <x-form.label
+                        for="email"
+                        :value="__('Email')"
+                    />
 
-            <div class="mt-4">
-                <x-label for="password" value="{{ __('Password') }}" />
-                <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
-            </div>
+                    <x-form.input-with-icon-wrapper>
+                        <x-slot name="icon">
+                            <x-heroicon-o-mail aria-hidden="true" class="w-5 h-5" />
+                        </x-slot>
 
-            <div class="block mt-4">
-                <label for="remember_me" class="flex items-center">
-                    <x-checkbox id="remember_me" name="remember" />
-                    <span class="ml-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-                </label>
-            </div>
+                        <x-form.input
+                            withicon
+                            id="email"
+                            class="block w-full"
+                            type="email"
+                            name="email"
+                            :value="old('email')"
+                            placeholder="{{ __('Email') }}"
+                            required
+                            autofocus
+                        />
+                    </x-form.input-with-icon-wrapper>
+                </div>
 
-            <div class="flex items-center justify-end mt-4">
+                <!-- Password -->
+                <div class="space-y-2">
+                    <x-form.label
+                        for="password"
+                        :value="__('Password')"
+                    />
 
+                    <x-form.input-with-icon-wrapper>
+                        <x-slot name="icon">
+                            <x-heroicon-o-lock-closed aria-hidden="true" class="w-5 h-5" />
+                        </x-slot>
 
-                @if (Route::has('password.request'))
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                        {{ __('Forgot your password?') }}
-                    </a>
+                        <x-form.input
+                            withicon
+                            id="password"
+                            class="block w-full"
+                            type="password"
+                            name="password"
+                            required
+                            autocomplete="current-password"
+                            placeholder="{{ __('Password') }}"
+                        />
+                    </x-form.input-with-icon-wrapper>
+                </div>
+
+                <!-- Remember Me -->
+                <div class="flex items-center justify-between">
+                    <label for="remember_me" class="inline-flex items-center">
+                        <input
+                            id="remember_me"
+                            type="checkbox"
+                            class="text-purple-500 border-gray-300 rounded focus:border-purple-300 focus:ring focus:ring-purple-500 dark:border-gray-600 dark:bg-dark-eval-1 dark:focus:ring-offset-dark-eval-1"
+                            name="remember"
+                        >
+
+                        <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">
+                            {{ __('Remember me') }}
+                        </span>
+                    </label>
+
+                    @if (Route::has('password.request'))
+                        <a class="text-sm text-blue-500 hover:underline" href="{{ route('password.request') }}">
+                            {{ __('Forgot your password?') }}
+                        </a>
+                    @endif
+                </div>
+
+                <div>
+                    <x-button class="justify-center w-full gap-2">
+                        <x-heroicon-o-login class="w-6 h-6" aria-hidden="true" />
+
+                        <span>{{ __('Log in') }}</span>
+                    </x-button>
+                </div>
+
+                @if (Route::has('register'))
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        {{ __('Don’t have an account?') }}
+                        <a href="{{ route('register') }}" class="text-blue-500 hover:underline">
+                            {{ __('Register') }}
+                        </a>
+                    </p>
                 @endif
-
-
-                <x-button class="ml-4">
-
-                    {{ __('Log in') }}
-                </x-button>
-                <x-button class="ml-4">
-
-<a class ="btn btn-success" href="{{route('github.login')}}">Github Login</a>
-</x-button>
             </div>
         </form>
-    </x-authentication-card>
+    </x-auth-card>
 </x-guest-layout>
